@@ -43,13 +43,17 @@ if urdu_word and book_choice:
     # Fetch the Ahadees data from API
     data = get_hadiths_from_api(urdu_word, book_slug)
     
+    # Display the raw API response to inspect its structure
+    st.write("API Response:", data)
+    
     # Displaying the data in a readable format
     if 'error' in data:
         st.error(data['error'])
     else:
         if data:
             for hadith in data:
-                # Check if the key exists before trying to access it
+                # Check the structure of each hadith and access keys safely
+                st.write("Hadith Data Structure:", hadith)
                 hadith_number = hadith.get('hadithNumber', 'N/A')
                 book = hadith.get('book', 'N/A')
                 text = hadith.get('hadithText', 'No text available')
