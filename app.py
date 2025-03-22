@@ -49,9 +49,14 @@ if urdu_word and book_choice:
     else:
         if data:
             for hadith in data:
-                st.write(f"**Hadith Number:** {hadith.get('hadithNumber')}")
-                st.write(f"**Book:** {hadith.get('book')}")
-                st.write(f"**Text:** {hadith.get('hadithText')}")
+                # Check if the key exists before trying to access it
+                hadith_number = hadith.get('hadithNumber', 'N/A')
+                book = hadith.get('book', 'N/A')
+                text = hadith.get('hadithText', 'No text available')
+
+                st.write(f"**Hadith Number:** {hadith_number}")
+                st.write(f"**Book:** {book}")
+                st.write(f"**Text:** {text}")
                 st.write("---")
         else:
             st.warning('No Ahadees found for the given search term.')
