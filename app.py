@@ -22,7 +22,7 @@ def get_hadiths_from_api(urdu_word, book_slug):
     url = f'https://hadithapi.com/api/hadiths?apiKey={API_KEY}&hadithUrdu={urdu_word}&book={book_slug}'
     response = requests.get(url)
     if response.status_code == 200:
-        return response.json()
+        return response.json()  # Returns the entire response
     else:
         return {"error": "Unable to fetch data from API"}
 
@@ -43,20 +43,19 @@ if urdu_word and book_choice:
     # Fetch the Ahadees data from API
     data = get_hadiths_from_api(urdu_word, book_slug)
     
-    # Display the raw API response to inspect its structure
+    # Displaying the raw API response to inspect its structure
     st.write("API Response:", data)
     
-    # Displaying the data in a readable format
+    # Checking if the response contains any error
     if 'error' in data:
         st.error(data['error'])
     else:
-        if data:
-            for hadith in data:
-                # Check the structure of each hadith and access keys safely
-                st.write("Hadith Data Structure:", hadith)
+        if 'hadiths' in data:  # Ensure we have the 'hadiths' key in the response
+            for hadith in data['hadiths']['data']:  # Loop through the list of hadiths inside 'data'
+                # Accessing individual Hadith fields safely using `.get()`
                 hadith_number = hadith.get('hadithNumber', 'N/A')
-                book = hadith.get('book', 'N/A')
-                text = hadith.get('hadithText', 'No text available')
+                book = hadith.get('book', {}).get('bookName', 'N/A')
+                text = hadith.get('hadithUrdu', 'No text available')
 
                 st.write(f"**Hadith Number:** {hadith_number}")
                 st.write(f"**Book:** {book}")
